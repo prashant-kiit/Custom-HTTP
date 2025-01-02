@@ -1,38 +1,48 @@
 package backend.src;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import backend.ENV;
+import library.Request;
+import library.Response;
 
 public class Server {
     public static void main(String[] args) {
-        int port = 8080; // Port number for the server
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server is listening on port " + port);
-
+        try (ServerSocket serverSocket = new ServerSocket(ENV.PORT)) {
+            System.out.println("Server is listening on port " + ENV.PORT + " at domain " + ENV.DOMAIN);
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected");
 
                 // Read the client's message
                 InputStream input = socket.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                String clientMessage = reader.readLine();
-                System.out.println("Client says: " + clientMessage);
+                ObjectInputStream in = new ObjectInputStream(input);
+                Request request = (Request) in.readObject();
+                System.out.println("Client says: mehtod = " + request.getMethod() + ", path = " + request.getPath());
 
                 // Respond to the client
                 OutputStream output = socket.getOutputStream();
-                PrintWriter writer = new PrintWriter(output, true);
-                writer.println("Hello, Client! I received your message: " + clientMessage);
+                ObjectOutputStream out = new ObjectOutputStream(output);
+                Response response = new Response();
+                // if message is success
+                response.setCode(200);
+                response.setMessage("Success");
+                response.setData("Hello world!");
+                // if message is failure
+                // response.setCode(400);
+                // response.setMessage("Failure");
+                // response.setError("Client Error");
+                out.writeObject(response);
 
-                socket.close(); // Close connection after response
+                in.close();
+                out.close();
+                socket.close();
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             System.out.println("Server exception: " + ex.getMessage());
             ex.printStackTrace();
         }

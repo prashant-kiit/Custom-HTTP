@@ -1,32 +1,43 @@
 package library;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class HTTP {
-    public static String get(String url) {
+    public static Response get(String url) {
+        String method = "GET";
         URLComponent urlComponent = URLComponent.parseUrl(url);
         String domain = urlComponent.getDomain();
         Integer port = urlComponent.getPort();
+        String path = urlComponent.getPath();
 
         try (Socket socket = new Socket(domain, port)) {
-            // send request
+            // send request to server
             OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-            writer.println("Hello, Server! This is the client.");
+            ObjectOutputStream out = new ObjectOutputStream(output);
+            Request request = new Request(method, domain, port, path);
+            out.writeObject(request);
 
-            // receive response
+            // receive response from server
             InputStream input = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            String serverMessage = reader.readLine();
-            return serverMessage;
+            ObjectInputStream in = new ObjectInputStream(input);
+            Response response = (Response) in.readObject();
+
+            in.close();
+            out.close();
+            socket.close();
+
+            return response;
         } catch (Exception ex) {
-            System.out.println("I/O error: " + ex.getMessage());
-            return ex.getMessage();
+            Response response = new Response();
+            response.setCode(500);
+            response.setMessage("Internal Server Error");
+            response.setError(ex.getMessage());
+
+            return response;
         }
     }
 }

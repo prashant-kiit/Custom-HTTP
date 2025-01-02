@@ -1,9 +1,10 @@
 import library.HTTP;
+import library.Response;
 
 public class Client {
     public static void main(String[] args) {
-        String response = HTTP.get("http://localhost:8080/users");
-        System.out.println(response);
+        Response response = HTTP.get("http://localhost:8080/users");
+        System.out.println(response.getData() + " " + response.getCode() + " " + response.getMessage());
         // Request request2 = HTTP.createPostRequest("http://localhost:8080/user",
         // "{\"name\":\"John\"}");
         // Response response = request2.send();

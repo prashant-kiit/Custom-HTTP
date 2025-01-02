@@ -1,6 +1,8 @@
 package library;
 
-public class Response {
+import java.io.Serializable;
+
+public class Response implements Serializable {
     private Integer code;
     private String message;
     private String data;
