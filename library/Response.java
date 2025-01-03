@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class Response implements Serializable {
     private Integer code;
     private String message;
-    private String data;
-    private String error;
+    private Object data;
+    private Object error;
 
     // Getters
     public Integer getCode() {
@@ -17,28 +17,32 @@ public class Response implements Serializable {
         return message;
     }
 
-    public String getData() {
+    public Object getData() {
         return data;
     }
 
-    public String getError() {
+    public Object getError() {
         return error;
     }
 
     // Setters
-    public void setCode(Integer code) {
+    public Response setCode(Integer code) {
         this.code = code;
+        return this;
     }
 
-    public void setMessage(String message) {
+    public Response setMessage(String message) {
         this.message = message;
+        return this;
     }
 
-    public void setData(String data) {
+    public Response setData(Object data) {
         this.data = data;
+        return this;
     }
 
-    public void setError(String error) {
+    public Response setError(Object error) {
         this.error = error;
+        return this;
     }
 }

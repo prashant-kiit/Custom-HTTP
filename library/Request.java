@@ -3,9 +3,9 @@ package library;
 import java.io.Serializable;
 
 public class Request implements Serializable {
-    private String method;
     private String domain;
     private Integer port;
+    private String method;
     private String path;
 
     public Request(String method, String domain, Integer port, String path) {

@@ -7,10 +7,18 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import backend.ENV;
+import backend.src.application.Application;
 import library.Request;
 import library.Response;
 
 public class Server {
+    private static TableOfQueues tableOfQueues = new TableOfQueues();
+
+    static {
+        // read from routes an fill table of queues
+        new Thread(new Application(tableOfQueues)).start();
+    }
+
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(ENV.PORT)) {
             System.out.println("Server is listening on port " + ENV.PORT + " at domain " + ENV.DOMAIN);
@@ -22,6 +30,7 @@ public class Server {
                 InputStream input = socket.getInputStream();
                 ObjectInputStream in = new ObjectInputStream(input);
                 Request request = (Request) in.readObject();
+                tableOfQueues.insert(request);
                 System.out.println("Client says: mehtod = " + request.getMethod() + ", path = " + request.getPath());
 
                 // Respond to the client
