@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import library.Request;
-import library.Response;
+import protocol.Request;
+import protocol.Response;
 
 public class Route {
     private Map<String, Function<Request, Response>> routes;

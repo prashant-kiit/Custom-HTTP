@@ -1,17 +1,12 @@
-import library.HTTP;
-import library.Response;
+import frontend.ENV;
+import frontend.library.HTTP;
+import protocol.Response;
 
 public class Client {
     public static void main(String[] args) {
-        Response response = HTTP.get("http://localhost:8080/users");
-        System.out.println(response.getData() + " " + response.getCode() + " " + response.getMessage());
-        // Request request2 = HTTP.createPostRequest("http://localhost:8080/user",
-        // "{\"name\":\"John\"}");
-        // Response response = request2.send();
-        // Request request3 = HTTP.createPutRequest("http://localhost:8080/user/1",
-        // "{\"name\":\"John\"}");
-        // Response response = request3.send();
-        // Request request4 = HTTP.createDeleteRequest("http://localhost:8080");
-        // Response response = request4.send();
+        System.out.println("Client is running");
+        Response response = HTTP.get(ENV.BASE_URL + "/users");
+        System.out.println("Code = " + response.getCode() + ", Message = " + response.getMessage() + ", Data = "
+                + response.getData());
     }
 }

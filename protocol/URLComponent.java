@@ -1,4 +1,4 @@
-package library;
+package protocol;
 
 public class URLComponent {
     private String domain;

@@ -1,17 +1,23 @@
-package library;
+package frontend.library;
 
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import protocol.Request;
+import protocol.Response;
+import protocol.URLComponent;
+
 public class HTTP {
+    private static final String GET = "GET";
+
     public static Response get(String url) {
-        String method = "GET";
         URLComponent urlComponent = URLComponent.parseUrl(url);
         String domain = urlComponent.getDomain();
         Integer port = urlComponent.getPort();
+        String method = GET;
         String path = urlComponent.getPath();
 
         try (Socket socket = new Socket(domain, port)) {
@@ -32,12 +38,9 @@ public class HTTP {
 
             return response;
         } catch (Exception ex) {
-            Response response = new Response();
-            response.setCode(500);
-            response.setMessage("Internal Server Error");
-            response.setError(ex.getMessage());
-
-            return response;
+            System.out.println("HTTP exception: " + ex.getMessage());
+            ex.printStackTrace();
+            return null;
         }
     }
 }
