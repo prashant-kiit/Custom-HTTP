@@ -22,6 +22,20 @@ public class User implements Serializable {
         return users;
     }
 
+    public static User findUserByName(String name) {
+        ArrayList<User> users = new ArrayList<>();
+        users.add(new User("John", "password", "j@j.com"));
+        users.add(new User("Jane", "password", "j@j.com"));
+        users.add(new User("Bob", "password", "j@j.com"));
+
+        for (User user : users) {
+            if (user.name.equals(name)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public static ArrayList<User> insertUsers(User data) {
         ArrayList<User> users = new ArrayList<>();
         users.add(new User("John", "password", "j@j.com"));

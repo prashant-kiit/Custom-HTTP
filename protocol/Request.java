@@ -1,39 +1,30 @@
 package protocol;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Request implements Serializable {
-    private String domain;
-    private Integer port;
     private String method;
     private String path;
     private Object data;
+    private Map<String, String> params;
 
-    public Request(String method, String domain, Integer port, String path) {
+    public Request(String method, String path) {
         this.method = method;
-        this.domain = domain;
-        this.port = port;
         this.path = path;
+        this.params = new HashMap<>();
     }
 
-    public Request(String method, String domain, Integer port, String path, Object data) {
+    public Request(String method, String path, Object data) {
         this.method = method;
-        this.domain = domain;
-        this.port = port;
         this.path = path;
         this.data = data;
+        this.params = new HashMap<>();
     }
 
     public String getMethod() {
         return method;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public Integer getPort() {
-        return port;
     }
 
     public String getPath() {
@@ -42,5 +33,13 @@ public class Request implements Serializable {
 
     public Object getData() {
         return data;
+    }
+
+    public String getParams(String paremKey) {
+        return params.get(paremKey);
+    }
+
+    public void setParams(String paramKey, String paramValue) {
+        params.put(paramKey, paramValue);
     }
 }

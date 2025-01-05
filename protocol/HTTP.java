@@ -6,24 +6,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import backend.src.application.database.User;
-
 public class HTTP {
     private static final String GET = "GET";
     private static final String POST = "POST";
 
     public static Response get(String url) throws Exception {
         URLComponent urlComponent = URLComponent.parseUrl(url);
-        String domain = urlComponent.getDomain();
-        Integer port = urlComponent.getPort();
-        String method = GET;
-        String path = urlComponent.getPath();
 
-        try (Socket socket = new Socket(domain, port)) {
+        try (Socket socket = new Socket(urlComponent.getDomain(), urlComponent.getPort())) {
             // send request to server
             OutputStream output = socket.getOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(output);
-            Request request = new Request(method, domain, port, path);
+            Request request = new Request(GET, urlComponent.getPath());
             out.writeObject(request);
 
             // receive response from server
@@ -43,16 +37,12 @@ public class HTTP {
 
     public static Response post(String url, Object data) throws Exception {
         URLComponent urlComponent = URLComponent.parseUrl(url);
-        String domain = urlComponent.getDomain();
-        Integer port = urlComponent.getPort();
-        String method = POST;
-        String path = urlComponent.getPath();
 
-        try (Socket socket = new Socket(domain, port)) {
+        try (Socket socket = new Socket(urlComponent.getDomain(), urlComponent.getPort())) {
             // send request to server
             OutputStream output = socket.getOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(output);
-            Request request = new Request(method, domain, port, path, data);
+            Request request = new Request(POST, urlComponent.getPath(), data);
             out.writeObject(request);
 
             // receive response from server

@@ -27,9 +27,8 @@ public class Channel implements Runnable {
                     "Channel receives a request : method = " + request.getMethod() + ", path = " + request.getPath());
 
             // route the request to the correct controller
-            String methodAndPath = request.getMethod() + ":" + request.getPath();
             Response response = route.getRoutes().entrySet().stream()
-                    .filter(entry -> entry.getKey().equals(methodAndPath))
+                    .filter(entry -> isSimilar(entry.getKey(), request))
                     .findFirst()
                     .map(entry -> entry.getValue().apply(request))
                     .orElse(new Response().setCode(404).setMessage("Failure").setError("Route not found"));
@@ -48,6 +47,33 @@ public class Channel implements Runnable {
             System.out.println("Channel exception: " + ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    private Boolean isSimilar(String key, Request request) {
+        String slug = request.getMethod() + "=" + request.getPath();
+        String[] keyParts = key.split("=");
+        String keyMethod = keyParts[0];
+        String keyPath = keyParts[1];
+        String[] slugParts = slug.split("=");
+        String slugMethod = slugParts[0];
+        String slugPath = slugParts[1];
+
+        if (!keyMethod.equals(slugMethod))
+            return false;
+        String keyPathParts[] = keyPath.split("/");
+        String slugPathParts[] = slugPath.split("/");
+
+        for (int i = 0; i < keyPathParts.length; i++) {
+            if (!keyPathParts[i].equals(slugPathParts[i])) {
+                if (keyPathParts[i].charAt(0) == ':') {
+                    request.setParams(keyPathParts[i].substring(1), slugPathParts[i]);
+                    continue;
+                }
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
