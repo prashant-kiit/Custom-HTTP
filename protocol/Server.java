@@ -1,4 +1,4 @@
-package backend.library;
+package protocol;
 
 import java.net.ServerSocket;
 import java.net.Socket;

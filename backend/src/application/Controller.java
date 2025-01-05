@@ -10,9 +10,24 @@ public class Controller {
     public static Function<Request, Response> getUsers = (request) -> {
         try {
             ArrayList<User> users = User.findUsers();
+            if (users.size() == 0) {
+                return new Response().setCode(404).setMessage("Failure").setError("No users found");
+            }
             return new Response().setCode(200).setMessage("Success").setData(users);
         } catch (Exception e) {
-            return new Response().setCode(400).setMessage("Error").setError(e.getMessage());
+            return new Response().setCode(500).setMessage("Error").setError(e.getMessage());
+        }
+    };
+
+    public static Function<Request, Response> postUsers = (request) -> {
+        try {
+            ArrayList<User> users = User.insertUsers((User) request.getData());
+            if (users.size() == 0) {
+                return new Response().setCode(404).setMessage("Failure").setError("No users found");
+            }
+            return new Response().setCode(200).setMessage("Success").setData(users);
+        } catch (Exception e) {
+            return new Response().setCode(500).setMessage("Error").setError(e.getMessage());
         }
     };
 }

@@ -1,4 +1,4 @@
-package backend.library;
+package protocol;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -6,8 +6,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import backend.src.application.Route;
-import protocol.Request;
-import protocol.Response;
 
 public class Channel implements Runnable {
     private Socket socket;
@@ -27,7 +25,6 @@ public class Channel implements Runnable {
             Request request = (Request) in.readObject();
             System.out.println(
                     "Channel receives a request : method = " + request.getMethod() + ", path = " + request.getPath());
-            in.close();
 
             // route the request to the correct controller
             String methodAndPath = request.getMethod() + ":" + request.getPath();
@@ -41,27 +38,15 @@ public class Channel implements Runnable {
             OutputStream output = socket.getOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(output);
             out.writeObject(response);
-            out.close();
-        } catch (Exception ex) {
-            try {
-                OutputStream output = socket.getOutputStream();
-                ObjectOutputStream out = new ObjectOutputStream(output);
-                Response response = new Response();
-                response.setCode(500).setMessage("Error").setError(ex.getMessage());
-                out.writeObject(response);
-                out.close();
-            } catch (Exception e) {
-                System.out.println("Server exception: " + e.getMessage());
-                e.printStackTrace();
-            }
-        } finally {
-            try {
-                socket.close();
-            } catch (Exception e) {
-                System.out.println("Server exception: " + e.getMessage());
-                e.printStackTrace();
-            }
+            System.out.println("Response: " + response.getData());
 
+            // Close the connection
+            in.close();
+            out.close();
+            socket.close();
+        } catch (Exception ex) {
+            System.out.println("Channel exception: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 

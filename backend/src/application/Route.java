@@ -13,6 +13,7 @@ public class Route {
     public Route() {
         this.routes = new HashMap<String, Function<Request, Response>>();
         this.routes.put("GET:users", Controller.getUsers);
+        this.routes.put("POST:user", Controller.postUsers);
     }
 
     public Map<String, Function<Request, Response>> getRoutes() {

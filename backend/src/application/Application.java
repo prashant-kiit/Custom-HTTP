@@ -1,6 +1,6 @@
 package backend.src.application;
 
-import backend.library.Server;
+import protocol.Server;
 
 public class Application {
     public static void main(String[] args) {
