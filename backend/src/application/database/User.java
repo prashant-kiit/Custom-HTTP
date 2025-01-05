@@ -3,8 +3,11 @@ package backend.src.application.database;
 import java.util.ArrayList;
 
 public class User {
+    @SuppressWarnings("unused")
     private String name;
+    @SuppressWarnings("unused")
     private String password;
+    @SuppressWarnings("unused")
     private String email;
 
     public User(String name, String password, String email) {

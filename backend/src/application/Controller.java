@@ -14,6 +14,5 @@ public class Controller {
         } catch (Exception e) {
             return new Response().setCode(400).setMessage("Error").setError(e.getMessage());
         }
-
     };
 }

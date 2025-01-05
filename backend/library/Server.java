@@ -5,8 +5,9 @@ import java.net.Socket;
 
 import backend.ENV;
 
-public class Server {
-    public static void main(String[] args) {
+public class Server implements Runnable {
+    @Override
+    public void run() {
         try (ServerSocket serverSocket = new ServerSocket(ENV.PORT)) {
             System.out.println("Server is listening on port " + ENV.PORT + " at domain " + ENV.DOMAIN);
             while (true) {
@@ -20,5 +21,4 @@ public class Server {
             ex.printStackTrace();
         }
     }
-
 }

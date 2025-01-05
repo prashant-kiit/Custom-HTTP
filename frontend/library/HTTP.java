@@ -13,7 +13,7 @@ import protocol.URLComponent;
 public class HTTP {
     private static final String GET = "GET";
 
-    public static Response get(String url) {
+    public static Response get(String url) throws Exception {
         URLComponent urlComponent = URLComponent.parseUrl(url);
         String domain = urlComponent.getDomain();
         Integer port = urlComponent.getPort();
@@ -38,9 +38,7 @@ public class HTTP {
 
             return response;
         } catch (Exception ex) {
-            System.out.println("HTTP exception: " + ex.getMessage());
-            ex.printStackTrace();
-            return null;
+            throw ex;
         }
     }
 }
