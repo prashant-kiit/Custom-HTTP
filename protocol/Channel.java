@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+
 import backend.src.application.Route;
 
 public class Channel implements Runnable {
@@ -23,12 +24,12 @@ public class Channel implements Runnable {
             InputStream input = socket.getInputStream();
             ObjectInputStream in = new ObjectInputStream(input);
             Request request = (Request) in.readObject();
-            System.out.println(
-                    "Channel receives a request : method = " + request.getMethod() + ", path = " + request.getPath());
+            System.out.println("Channel receives a request : request = " + request);
 
+            // TODO: parse the request
             // route the request to the correct controller
             Response response = route.getRoutes().entrySet().stream()
-                    .filter(entry -> isSimilar(entry.getKey(), request))
+                    .filter(entry -> URLComponent.isSimilar(entry.getKey(), request))
                     .findFirst()
                     .map(entry -> entry.getValue().apply(request))
                     .orElse(new Response().setCode(404).setMessage("Failure").setError("Route not found"));
@@ -48,32 +49,4 @@ public class Channel implements Runnable {
             ex.printStackTrace();
         }
     }
-
-    private Boolean isSimilar(String key, Request request) {
-        String slug = request.getMethod() + "=" + request.getPath();
-        String[] keyParts = key.split("=");
-        String keyMethod = keyParts[0];
-        String keyPath = keyParts[1];
-        String[] slugParts = slug.split("=");
-        String slugMethod = slugParts[0];
-        String slugPath = slugParts[1];
-
-        if (!keyMethod.equals(slugMethod))
-            return false;
-        String keyPathParts[] = keyPath.split("/");
-        String slugPathParts[] = slugPath.split("/");
-
-        for (int i = 0; i < keyPathParts.length; i++) {
-            if (!keyPathParts[i].equals(slugPathParts[i])) {
-                if (keyPathParts[i].charAt(0) == ':') {
-                    request.setParams(keyPathParts[i].substring(1), slugPathParts[i]);
-                    continue;
-                }
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 }

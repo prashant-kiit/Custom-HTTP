@@ -42,4 +42,14 @@ public class Request implements Serializable {
     public void setParams(String paramKey, String paramValue) {
         params.put(paramKey, paramValue);
     }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "method='" + method + '\'' +
+                ", path='" + path + '\'' +
+                ", data=" + data +
+                ", params=" + params +
+                '}';
+    }
 }

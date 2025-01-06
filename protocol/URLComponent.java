@@ -1,5 +1,7 @@
 package protocol;
 
+import java.util.Map;
+
 public class URLComponent {
     private String domain;
     private Integer port;
@@ -35,5 +37,29 @@ public class URLComponent {
         Integer port = Integer.parseInt(domainportparts[1]);
 
         return new URLComponent(domain, port, path);
+    }
+
+    public static Boolean isSimilar(Map<String, String> key, Request request) {
+        String keyMethod = key.get("method");
+        String keyPath = key.get("path");
+        String requestMethod = request.getMethod();
+        String requestPath = request.getPath();
+
+        if (!keyMethod.equals(requestMethod))
+            return false;
+        String keyPathParts[] = keyPath.split("/");
+        String slugPathParts[] = requestPath.split("/");
+
+        for (Integer i = 0; i < keyPathParts.length; i++) {
+            if (!keyPathParts[i].equals(slugPathParts[i])) {
+                if (keyPathParts[i].charAt(0) == ':') {
+                    request.setParams(keyPathParts[i].substring(1), slugPathParts[i]);
+                    continue;
+                }
+                return false;
+            }
+        }
+
+        return true;
     }
 }
