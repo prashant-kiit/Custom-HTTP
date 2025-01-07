@@ -1,5 +1,6 @@
 package protocol;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class URLComponent {
@@ -42,13 +43,14 @@ public class URLComponent {
     public static Boolean isSimilar(Map<String, String> key, Request request) {
         String keyMethod = key.get("method");
         String keyPath = key.get("path");
+        String keyPathParts[] = keyPath.split("/");
         String requestMethod = request.getMethod();
         String requestPath = request.getPath();
-
-        if (!keyMethod.equals(requestMethod))
-            return false;
-        String keyPathParts[] = keyPath.split("/");
         String slugPathParts[] = requestPath.split("/");
+
+        if (!keyMethod.equals(requestMethod) || keyPathParts.length != slugPathParts.length) {
+            return false;
+        }
 
         for (Integer i = 0; i < keyPathParts.length; i++) {
             if (!keyPathParts[i].equals(slugPathParts[i])) {

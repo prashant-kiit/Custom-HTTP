@@ -26,14 +26,13 @@ public class Channel implements Runnable {
             Request request = (Request) in.readObject();
             System.out.println("Channel receives a request : request = " + request);
 
-            // TODO: parse the request
             // route the request to the correct controller
             Response response = route.getRoutes().entrySet().stream()
-                    .filter(entry -> URLComponent.isSimilar(entry.getKey(), request))
-                    .findFirst()
+                    .filter(entry -> URLComponent.isSimilar(entry.getKey(), request)).findFirst()
                     .map(entry -> entry.getValue().apply(request))
                     .orElse(new Response().setCode(404).setMessage("Failure").setError("Route not found"));
 
+          
             // Respond to the client
             OutputStream output = socket.getOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(output);

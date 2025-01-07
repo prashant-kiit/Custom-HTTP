@@ -7,13 +7,15 @@ import java.util.Map;
 public class Request implements Serializable {
     private String method;
     private String path;
-    private Object data;
     private Map<String, String> params;
+    private Map<String, String> query;
+    private Object data;
 
     public Request(String method, String path) {
         this.method = method;
         this.path = path;
         this.params = new HashMap<>();
+        this.query = new HashMap<>();
     }
 
     public Request(String method, String path, Object data) {
@@ -21,6 +23,7 @@ public class Request implements Serializable {
         this.path = path;
         this.data = data;
         this.params = new HashMap<>();
+        this.query = new HashMap<>();
     }
 
     public String getMethod() {
@@ -41,6 +44,14 @@ public class Request implements Serializable {
 
     public void setParams(String paramKey, String paramValue) {
         params.put(paramKey, paramValue);
+    }
+
+    public String getQuery(String queryKey) {
+        return query.get(queryKey);
+    }
+
+    public String setQuery(String queryKey, String queryValue) {
+        return query.put(queryKey, queryValue);
     }
 
     @Override

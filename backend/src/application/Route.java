@@ -14,6 +14,7 @@ public class Route {
         this.routes = new HashMap<Map<String, String>, Function<Request, Response>>();
         this.insertRoute("GET=users", Controller.getUsers);
         this.insertRoute("GET=users/:name", Controller.getUserById);
+        this.insertRoute("GET=oops/:name", Controller.getUserById);
         this.insertRoute("POST=user", Controller.postUsers);
     }
 
