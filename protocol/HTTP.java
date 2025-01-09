@@ -1,33 +1,23 @@
 package protocol;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-
 public class HTTP {
     private static final String GET = "GET";
     private static final String POST = "POST";
+    private static final String PUT = "PUT";
+    private static final String DELETE = "DELETE";
 
-    public static Response get(String url) throws Exception {
-        URLComponent urlComponent = URLComponent.parseUrl(url);
-
-        try (Socket socket = new Socket(urlComponent.getDomain(), urlComponent.getPort())) {
+    private static Response call(String method, String url) throws Exception {
+        try {
+            // parse url
+            URLComponent urlComponent = URLComponent.parseUrl(url);
+            // connect to server
+            Connector connector = new Connector(urlComponent.getDomain(), urlComponent.getPort());
             // send request to server
-            OutputStream output = socket.getOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(output);
-            Request request = new Request(GET, urlComponent.getPath());
-            out.writeObject(request);
-
+            connector.sendRequest(GET, urlComponent.getPath());
             // receive response from server
-            InputStream input = socket.getInputStream();
-            ObjectInputStream in = new ObjectInputStream(input);
-            Response response = (Response) in.readObject();
-
-            in.close();
-            out.close();
-            socket.close();
+            Response response = connector.receiveResponse();
+            // close the connection
+            connector.close();
 
             return response;
         } catch (Exception ex) {
@@ -35,26 +25,36 @@ public class HTTP {
         }
     }
 
+    public static Response get(String url) throws Exception {
+        try {
+            Response response = call(GET, url);
+            return response;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+
     public static Response post(String url, Object data) throws Exception {
-        URLComponent urlComponent = URLComponent.parseUrl(url);
+        try {
+            Response response = call(POST, url);
+            return response;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
 
-        try (Socket socket = new Socket(urlComponent.getDomain(), urlComponent.getPort())) {
-            // send request to server
-            OutputStream output = socket.getOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(output);
-            Request request = new Request(POST, urlComponent.getPath(), data);
-            out.writeObject(request);
+    public static Response put(String url, Object data) throws Exception {
+        try {
+            Response response = call(PUT, url);
+            return response;
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
 
-            // receive response from server
-            InputStream input = socket.getInputStream();
-            ObjectInputStream in = new ObjectInputStream(input);
-            Response response = (Response) in.readObject();
-
-            // close the connection
-            in.close();
-            out.close();
-            socket.close();
-
+    public static Response delete(String url) throws Exception {
+        try {
+            Response response = call(DELETE, url);
             return response;
         } catch (Exception ex) {
             throw ex;

@@ -52,10 +52,10 @@ public class URLComponent {
             return false;
         }
 
-        for (Integer i = 0; i < keyPathParts.length; i++) {
-            if (!keyPathParts[i].equals(slugPathParts[i])) {
-                if (keyPathParts[i].charAt(0) == ':') {
-                    request.setParams(keyPathParts[i].substring(1), slugPathParts[i]);
+        for (Integer index = 0; index < keyPathParts.length; index++) {
+            if (!keyPathParts[index].equals(slugPathParts[index])) {
+                if (keyPathParts[index].charAt(0) == ':') {
+                    request.setParams(keyPathParts[index].substring(1), slugPathParts[index]);
                     continue;
                 }
                 return false;

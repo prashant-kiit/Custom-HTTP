@@ -32,7 +32,6 @@ public class Channel implements Runnable {
                     .map(entry -> entry.getValue().apply(request))
                     .orElse(new Response().setCode(404).setMessage("Failure").setError("Route not found"));
 
-          
             // Respond to the client
             OutputStream output = socket.getOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(output);
