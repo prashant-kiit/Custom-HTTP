@@ -8,6 +8,7 @@ import backend.ENV;
 public class Server implements Runnable {
     @Override
     public void run() {
+        // test
         try (ServerSocket serverSocket = new ServerSocket(ENV.PORT)) {
             System.out.println("Server is listening on port " + ENV.PORT + " at domain " + ENV.DOMAIN);
             while (true) {
