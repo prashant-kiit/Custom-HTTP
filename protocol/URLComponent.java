@@ -1,6 +1,5 @@
 package protocol;
 
-import java.util.Arrays;
 import java.util.Map;
 
 public class URLComponent {

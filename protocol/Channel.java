@@ -12,9 +12,9 @@ public class Channel implements Runnable {
     private Socket socket;
     private Route route;
 
-    public Channel(Socket socket) {
+    public Channel(Socket socket, Route route) {
         this.socket = socket;
-        this.route = new Route();
+        this.route = route;
     }
 
     @Override
