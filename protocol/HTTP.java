@@ -6,28 +6,13 @@ public class HTTP {
     private static final String PUT = "PUT";
     private static final String DELETE = "DELETE";
 
-    private static Response call(String method, String url) throws Exception {
-        try {
-            // parse url
-            URLComponent urlComponent = URLComponent.parseUrl(url);
-            // connect to server
-            Connector connector = new Connector(urlComponent.getDomain(), urlComponent.getPort());
-            // send request to server
-            connector.sendRequest(GET, urlComponent.getPath());
-            // receive response from server
-            Response response = connector.receiveResponse();
-            // close the connection
-            connector.close();
-
-            return response;
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
-
     public static Response get(String url) throws Exception {
         try {
-            Response response = call(GET, url);
+            URLComponent urlComponent = URLComponent.parseUrl(url);
+            String domain = urlComponent.getDomain();
+            Integer port = urlComponent.getPort();
+            Request request = new Request(GET, urlComponent.getPath());
+            Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
             throw ex;
@@ -36,7 +21,11 @@ public class HTTP {
 
     public static Response post(String url, Object data) throws Exception {
         try {
-            Response response = call(POST, url);
+            URLComponent urlComponent = URLComponent.parseUrl(url);
+            String domain = urlComponent.getDomain();
+            Integer port = urlComponent.getPort();
+            Request request = new Request(POST, urlComponent.getPath(), data);
+            Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
             throw ex;
@@ -45,7 +34,11 @@ public class HTTP {
 
     public static Response put(String url, Object data) throws Exception {
         try {
-            Response response = call(PUT, url);
+            URLComponent urlComponent = URLComponent.parseUrl(url);
+            String domain = urlComponent.getDomain();
+            Integer port = urlComponent.getPort();
+            Request request = new Request(PUT, urlComponent.getPath(), data);
+            Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
             throw ex;
@@ -54,7 +47,11 @@ public class HTTP {
 
     public static Response delete(String url) throws Exception {
         try {
-            Response response = call(DELETE, url);
+            URLComponent urlComponent = URLComponent.parseUrl(url);
+            String domain = urlComponent.getDomain();
+            Integer port = urlComponent.getPort();
+            Request request = new Request(DELETE, urlComponent.getPath());
+            Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
             throw ex;

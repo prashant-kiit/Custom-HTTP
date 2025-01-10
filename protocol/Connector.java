@@ -19,10 +19,9 @@ public class Connector {
         this.socket = new Socket(domain, port);
     }
 
-    public void sendRequest(String method, String path) throws IOException {
+    public void sendRequest(Request request) throws IOException {
         this.output = socket.getOutputStream();
         this.out = new ObjectOutputStream(output);
-        Request request = new Request(method, path);
         out.writeObject(request);
     }
 
@@ -34,8 +33,8 @@ public class Connector {
     }
 
     public void close() throws IOException {
-        in.close();
-        out.close();
-        socket.close();
+        this.in.close();
+        this.out.close();
+        this.socket.close();
     }
 }
