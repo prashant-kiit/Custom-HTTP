@@ -15,6 +15,7 @@ public class HTTP {
             Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
+            System.out.println("500 Error " + ex.getMessage());
             throw ex;
         }
     }
@@ -28,6 +29,7 @@ public class HTTP {
             Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
+            System.out.println("500 Error " + ex.getMessage());
             throw ex;
         }
     }
@@ -41,6 +43,7 @@ public class HTTP {
             Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
+            System.out.println("500 Error " + ex.getMessage());
             throw ex;
         }
     }
@@ -54,6 +57,7 @@ public class HTTP {
             Response response = Network.call(domain, port, request);
             return response;
         } catch (Exception ex) {
+            System.out.println("500 Error " + ex.getMessage());
             throw ex;
         }
     }

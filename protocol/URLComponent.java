@@ -39,12 +39,12 @@ public class URLComponent {
         return new URLComponent(domain, port, path);
     }
 
-    public static Boolean isSimilar(Map<String, String> key, Request request) {
-        String keyMethod = key.get("method");
-        String keyPath = key.get("path");
-        String keyPathParts[] = keyPath.split("/");
+    public static Boolean isSimilar(Route route, Request request) {
+        String keyMethod = route.getMethod();
+        String keyPath = route.getPath();
         String requestMethod = request.getMethod();
         String requestPath = request.getPath();
+        String keyPathParts[] = keyPath.split("/");
         String slugPathParts[] = requestPath.split("/");
 
         if (!keyMethod.equals(requestMethod) || keyPathParts.length != slugPathParts.length) {

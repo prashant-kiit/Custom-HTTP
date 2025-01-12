@@ -6,30 +6,32 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class Connector {
     private Socket socket;
-    private OutputStream output;
     private InputStream input;
-    private ObjectOutputStream out;
     private ObjectInputStream in;
+    private Request request;
+    private OutputStream output;
+    private ObjectOutputStream out;
+    private Response response;
 
-    public Connector(String domain, Integer port) throws UnknownHostException, IOException {
-        this.socket = new Socket(domain, port);
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 
-    public void sendRequest(Request request) throws IOException {
-        this.output = socket.getOutputStream();
-        this.out = new ObjectOutputStream(output);
-        out.writeObject(request);
-    }
-
-    public Response receiveResponse() throws IOException, ClassNotFoundException {
-        this.input = socket.getInputStream();
+    public void receiveRequest() throws IOException, ClassNotFoundException {
+        this.input = this.socket.getInputStream();
         this.in = new ObjectInputStream(input);
-        Response response = (Response) in.readObject();
-        return response;
+        this.request = (Request) this.in.readObject();
+        System.out.println("Connector receives a request : request = " + request);
+    }
+
+    public void sendResponse(Response response) throws IOException {
+        this.response = response;
+        this.output = this.socket.getOutputStream();
+        this.out = new ObjectOutputStream(output);
+        out.writeObject(response);
     }
 
     public void close() throws IOException {
@@ -37,4 +39,13 @@ public class Connector {
         this.out.close();
         this.socket.close();
     }
+
+    public Request getRequest() {
+        return this.request;
+    }
+
+    public Response getResponse() {
+        return this.response;
+    }
+
 }

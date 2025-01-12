@@ -1,23 +1,24 @@
 package protocol;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 public class RouterHandler {
-    protected Map<Map<String, String>, Function<Request, Response>> routes = new HashMap<Map<String, String>, Function<Request, Response>>();
+    private static ArrayList<Route> routes = new ArrayList<Route>();
 
-    protected void insertRoute(String key, Function<Request, Response> value) {
-        String[] keyParts = key.split("=");
+    public static void insertRoute(String routeName, Function<Request, Response> controller) {
+        String[] keyParts = routeName.split("=");
         String keyMethod = keyParts[0];
         String keyPath = keyParts[1];
-        Map<String, String> keyMap = new HashMap<String, String>();
-        keyMap.put("method", keyMethod);
-        keyMap.put("path", keyPath);
-        this.routes.put(keyMap, value);
+        // create route
+        Route route = new Route(keyMethod, keyPath, controller);
+        // start controller thread
+        new Thread(new ControllerHandler(route)).start();
+        // add route with controller and respective queue
+        routes.add(route);
     }
 
-    public Map<Map<String, String>, Function<Request, Response>> getRoutes() {
-        return this.routes;
+    public static ArrayList<Route> getRoutes() {
+        return routes;
     }
 }
