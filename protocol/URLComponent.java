@@ -1,7 +1,5 @@
 package protocol;
 
-import java.util.Map;
-
 public class URLComponent {
     private String domain;
     private Integer port;
