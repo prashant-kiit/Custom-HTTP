@@ -25,7 +25,7 @@ public class Route {
         return path;
     }
 
-    public Queue<Connector> getControllerQueue() {
+    public synchronized Queue<Connector> getControllerQueue() {
         return controllerQueue;
     }
 

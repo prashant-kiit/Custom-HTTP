@@ -11,14 +11,22 @@ public class ControllerHandler implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Controller is running");
         while (true) {
-            Connector connector = route.getControllerQueue().poll();
+            // pull the request from controller queue
+            Connector connector = this.route.getControllerQueue().poll();
             if (connector == null)
-                return;
+                continue;
             Request request = connector.getRequest();
-            Response response = route.getController().apply(request);
+
+            // execute the controller function
+            Response response = this.route.getController().apply(request);
             try {
+                // send response
                 connector.sendResponse(response);
+
+                // close connector
+                connector.close();
             } catch (IOException e) {
                 System.out.println("RouterHandler exception: " + e.getMessage());
                 e.printStackTrace();

@@ -4,9 +4,21 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 public class RouterHandler {
-    private static ArrayList<Route> routes = new ArrayList<Route>();
+    private static RouterHandler instance;
+    private ArrayList<Route> routes;
 
-    public static void insertRoute(String routeName, Function<Request, Response> controller) {
+    private RouterHandler() {
+        routes = new ArrayList<Route>();
+    }
+
+    public static RouterHandler getInstance() {
+        if (instance == null) {
+            instance = new RouterHandler();
+        }
+        return instance;
+    }
+
+    public synchronized void insertRoute(String routeName, Function<Request, Response> controller) {
         String[] keyParts = routeName.split("=");
         String keyMethod = keyParts[0];
         String keyPath = keyParts[1];
@@ -15,10 +27,12 @@ public class RouterHandler {
         // start controller thread
         new Thread(new ControllerHandler(route)).start();
         // add route with controller and respective queue
-        routes.add(route);
+        this.routes.add(route);
+
+        System.out.println("Route added to router : routes = " + routes);
     }
 
-    public static ArrayList<Route> getRoutes() {
-        return routes;
+    public synchronized ArrayList<Route> getRoutes() {
+        return this.routes;
     }
 }

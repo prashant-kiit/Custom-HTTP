@@ -23,5 +23,6 @@ public class MainTaskQueue {
 
     public synchronized void addConnector(Connector connector) {
         queue.add(connector);
+        System.out.println("Connector added to main task queue : connector = " + connector);
     }
 }
