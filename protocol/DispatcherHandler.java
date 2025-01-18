@@ -3,10 +3,10 @@ package protocol;
 import java.io.IOException;
 
 public class DispatcherHandler implements Runnable {
-    private Integer holdTime;
+    private RouterHandler routerHandler;
 
-    public DispatcherHandler(Integer holdTime) {
-        this.holdTime = holdTime;
+    public DispatcherHandler(RouterHandler routerHandler) {
+        this.routerHandler = routerHandler;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class DispatcherHandler implements Runnable {
             Request request = connector.getRequest();
 
             // find matched and unmatched route request
-            Route result = RouterHandler.getInstance().getRoutes()
+            Route result = routerHandler.getRoutes()
                     .stream()
                     .filter(route -> URLComponent.isSimilar(route, request)).findFirst().orElse(null);
 
@@ -38,13 +38,6 @@ public class DispatcherHandler implements Runnable {
 
             // handled matched route request
             result.getControllerQueue().add(connector);
-
-            // rate limiter
-            try {
-                Thread.sleep(holdTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 

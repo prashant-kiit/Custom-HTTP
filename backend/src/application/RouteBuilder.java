@@ -3,11 +3,17 @@ package backend.src.application;
 import protocol.RouterHandler;
 
 public class RouteBuilder {
+    private RouterHandler routerHandler;
+
+    public RouteBuilder(RouterHandler routerHandler) {
+        this.routerHandler = routerHandler;
+    }
+
     public void listen() {
-        RouterHandler.getInstance().insertRoute("GET=users", Controller.getUsers);
-        RouterHandler.getInstance().insertRoute("GET=users/:name", Controller.getUserById);
-        RouterHandler.getInstance().insertRoute("POST=user", Controller.postUser);
-        RouterHandler.getInstance().insertRoute("PUT=users/:name", Controller.putUser);
-        RouterHandler.getInstance().insertRoute("DELETE=users/:name", Controller.deleteUser);
+        routerHandler.insertRoute("GET=users", Controller.getUsers);
+        routerHandler.insertRoute("GET=users/:name", Controller.getUserById);
+        routerHandler.insertRoute("POST=user", Controller.postUser);
+        routerHandler.insertRoute("PUT=users/:name", Controller.putUser);
+        routerHandler.insertRoute("DELETE=users/:name", Controller.deleteUser);
     }
 }

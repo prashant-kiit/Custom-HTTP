@@ -1,13 +1,13 @@
 package protocol;
 
 public class Dispatcher {
-    private Integer holdTime;
+    private DispatcherHandler dispatcherHandler;
 
-    public Dispatcher(Integer holdTime) {
-        this.holdTime = holdTime;
+    public Dispatcher(RouterHandler routerHandler) {
+        dispatcherHandler = new DispatcherHandler(routerHandler);
     }
 
     public void listen() {
-        new Thread(new DispatcherHandler(holdTime)).start();
+        new Thread(dispatcherHandler).start();
     };
 }
