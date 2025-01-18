@@ -3,6 +3,12 @@ package protocol;
 import java.io.IOException;
 
 public class DispatcherHandler implements Runnable {
+    private Integer holdTime;
+
+    public DispatcherHandler(Integer holdTime) {
+        this.holdTime = holdTime;
+    }
+
     @Override
     public void run() {
         System.out.println("Dispatcher is running");
@@ -32,6 +38,13 @@ public class DispatcherHandler implements Runnable {
 
             // handled matched route request
             result.getControllerQueue().add(connector);
+
+            // rate limiter
+            try {
+                Thread.sleep(holdTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

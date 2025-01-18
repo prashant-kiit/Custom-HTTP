@@ -10,9 +10,9 @@ public class Application {
         // starts controller thread
         RouteBuilder routeBuilder = new RouteBuilder();
         routeBuilder.listen();
-        
+
         // starts dispacher thread
-        Dispatcher dispatcher = new Dispatcher();
+        Dispatcher dispatcher = new Dispatcher(5000);
         dispatcher.listen();
         // starts server thread
         Server server = new Server(ENV.DOMAIN, ENV.PORT);
