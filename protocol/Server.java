@@ -5,6 +5,7 @@ import java.io.IOException;
 public class Server implements Runnable {
     private Integer port;
     private String domain;
+    private MainTaskQueue mainTaskQueue;
 
     public Server(String domain, Integer port) throws IOException {
         this.domain = domain;
@@ -20,7 +21,7 @@ public class Server implements Runnable {
                 Connector connector = serverConnector.accept();
                 System.out.println("New client connected");
                 connector.receiveRequest();
-                MainTaskQueue.getInstance().addConnector(connector);
+                this.mainTaskQueue.addConnector(connector);
             }
         } catch (Exception ex) {
             System.out.println("Server exception: " + ex.getMessage());

@@ -3,8 +3,8 @@ package protocol;
 public class Dispatcher {
     private DispatcherHandler dispatcherHandler;
 
-    public Dispatcher(RouterHandler routerHandler) {
-        dispatcherHandler = new DispatcherHandler(routerHandler);
+    public Dispatcher(RouterHandler routerHandler, MainTaskQueue mainTaskQueue) {
+        dispatcherHandler = new DispatcherHandler(routerHandler, mainTaskQueue);
     }
 
     public void listen() {

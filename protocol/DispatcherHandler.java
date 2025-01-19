@@ -4,9 +4,11 @@ import java.io.IOException;
 
 public class DispatcherHandler implements Runnable {
     private RouterHandler routerHandler;
+    private MainTaskQueue mainTaskQueue;
 
-    public DispatcherHandler(RouterHandler routerHandler) {
+    public DispatcherHandler(RouterHandler routerHandler, MainTaskQueue mainTaskQueue) {
         this.routerHandler = routerHandler;
+        this.mainTaskQueue = mainTaskQueue;
     }
 
     @Override
@@ -14,7 +16,7 @@ public class DispatcherHandler implements Runnable {
         System.out.println("Dispatcher is running");
         while (true) {
             // pull the request from main task queue
-            Connector connector = MainTaskQueue.getInstance().getQueue().poll();
+            Connector connector = this.mainTaskQueue.getQueue().poll();
             if (connector == null)
                 continue;
             Request request = connector.getRequest();
