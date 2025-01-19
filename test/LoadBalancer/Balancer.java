@@ -6,15 +6,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Balancer implements Runnable {
-    private String name;
+    private String domain;
     private Integer port;
-    private Integer semaphore = 1;
+    private ArrayList<Config> services;
+    private Integer semaphore;
+    private Integer denominator;
 
-    public Balancer(String name, Integer port) {
-        this.name = name;
+    public Balancer(String domain, Integer port, ArrayList<Config> services) {
+        this.domain = domain;
         this.port = port;
+        this.services = services;
+        this.semaphore = 0;
+        this.denominator = services.size();
     }
 
     @Override
@@ -22,46 +29,37 @@ public class Balancer implements Runnable {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Balancer is listening on port " + port);
             while (true) {
+                // new connection
                 try (Socket socket = serverSocket.accept();
                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+                    System.out.println("New client connected to Balancer");
 
-                    System.out.println("New client connected to Balancer with semaphore " + semaphore);
-
+                    // receive the message
                     String message = in.readLine();
 
+                    // load balancing starts here
                     String response = "uninitialized variable";
-                    if (semaphore == 1) {
-                        try (Socket socket1 = new Socket("localhost", 8080);
-                                PrintWriter out1 = new PrintWriter(socket1.getOutputStream(), true);
-                                BufferedReader in1 = new BufferedReader(
-                                        new InputStreamReader(socket1.getInputStream()))) {
+                    String subdomain = services.get(semaphore).getDomain();
+                    Integer subport = services.get(semaphore).getPort();
+                    System.out.println("New client directed to " + subdomain + ":" + subport);
 
-                            System.out.println("New client directed to Service 1");
-                            out1.println(message);
-                            response = in1.readLine();
-                        } catch (IOException e) {
-                            System.out.println("Error in Service 1 communication: " + e.getMessage());
-                        }
+                    try (Socket subsocket = new Socket(subdomain, subport);
+                            PrintWriter subout = new PrintWriter(subsocket.getOutputStream(), true);
+                            BufferedReader subin = new BufferedReader(
+                                    new InputStreamReader(subsocket.getInputStream()))) {
+
+                        subout.println(message);
+                        response = subin.readLine();
+                    } catch (IOException e) {
+                        System.out.println("Error in Load Balancing: " + e.getMessage());
                     }
 
-                    if (semaphore == -1) {
-                        try (Socket socket2 = new Socket("localhost", 8081);
-                                PrintWriter out2 = new PrintWriter(socket2.getOutputStream(), true);
-                                BufferedReader in2 = new BufferedReader(
-                                        new InputStreamReader(socket2.getInputStream()))) {
+                    // send the response
+                    out.println("Message received: " + response + " from Balancer at " + domain + ":" + port);
 
-                            System.out.println("New client directed to Service 2");
-                            out2.println(message);
-                            response = in2.readLine();
-                        } catch (IOException e) {
-                            System.out.println("Error in Service 2 communication: " + e.getMessage());
-                        }
-                    }
-
-                    out.println("Message received: " + response + " from " + name);
-
-                    semaphore = (semaphore * -1);
+                    // update the semaphore
+                    semaphore = (semaphore + 1) % denominator;
                 } catch (IOException e) {
                     System.out.println("Error in balancer communication: " + e.getMessage());
                 }

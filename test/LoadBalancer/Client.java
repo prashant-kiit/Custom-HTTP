@@ -9,7 +9,7 @@ import java.net.Socket;
 public class Client {
     public static void main(String[] args) {
         String serverAddress = "localhost";
-        Integer port = 8082;
+        Integer port = 8080;
 
         try (Socket socket = new Socket(serverAddress, port);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
