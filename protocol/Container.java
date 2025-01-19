@@ -19,8 +19,8 @@ public class Container implements Runnable {
         System.out.println("Running = " + name);
 
         RouterHandler routerHandler = new RouterHandler();
-
         MainTaskQueue mainTaskQueue = new MainTaskQueue();
+
         // starts controller thread
         RouteBuilder routeBuilder = new RouteBuilder(routerHandler);
         routeBuilder.listen();

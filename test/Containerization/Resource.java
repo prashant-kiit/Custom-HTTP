@@ -1,4 +1,4 @@
-package test;
+package test.Containerization;
 
 public class Resource {
     private static Resource instance;
