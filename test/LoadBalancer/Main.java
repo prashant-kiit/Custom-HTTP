@@ -1,11 +1,9 @@
 package test.LoadBalancer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // configure and register the services
         ArrayList<Config> services = new ArrayList<Config>();
         services.add(new Config("localhost", 8081));
@@ -19,11 +17,18 @@ public class Main {
             Integer port = service.getPort();
 
             // run the server
-            new Thread(new Service(domain, port)).start();
+            Thread server = new Thread(new Service(domain, port));
+            server.start();
         }
 
+        // run the event loop
+        EventLoop eventLoop = new EventLoop(services);
+        Thread eventLoopThread = new Thread(eventLoop);
+        eventLoopThread.start();
+
         // run the balancer
-        Balancer balancer = new Balancer("localhost", 8080, services);
-        new Thread(balancer).start();
+        Balancer balancer = new Balancer("localhost", 8080);
+        Thread balancerThread = new Thread(balancer);
+        balancerThread.start();
     }
 }

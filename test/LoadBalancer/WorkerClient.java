@@ -1,6 +1,8 @@
 package test.LoadBalancer;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -9,6 +11,13 @@ import java.net.Socket;
 public class WorkerClient implements Runnable {
     private String serverAddress = "localhost";
     private Integer port = 8080;
+    private FileWriter dataWriter;
+    private FileWriter errorWriter;
+
+    public WorkerClient(FileWriter dataWriter, FileWriter errorWriter) {
+        this.dataWriter = dataWriter;
+        this.errorWriter = errorWriter;
+    }
 
     @Override
     public void run() {
@@ -22,8 +31,20 @@ public class WorkerClient implements Runnable {
             String response = in.readLine();
             System.out.println("Received: " + response);
 
+            try {
+                String content = "Received: " + response;
+                dataWriter.append(content + "\n");
+            } catch (IOException ex) {
+                // System.err.println("An error occurred: " + ex.getMessage());
+            }
+
         } catch (IOException e) {
-            System.out.println("Error in client communication: " + e.getMessage());
+            try {
+                String content = "Error in client communication: " + e.getMessage();
+                errorWriter.append(content + "\n");
+            } catch (IOException ex) {
+                // System.err.println("An error occurred: " + ex.getMessage());
+            }
         }
         // }
     }
