@@ -12,12 +12,10 @@ import java.util.Queue;
 public class Service implements Runnable {
     private String domain;
     private Integer port;
-    private Queue<String> queue;
 
     public Service(String domain, Integer port) {
         this.domain = domain;
         this.port = port;
-        this.queue = new LinkedList<String>();
     }
 
     @Override
