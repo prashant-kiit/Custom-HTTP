@@ -53,7 +53,7 @@ public class EventLoop implements Runnable {
                 }
 
                 // send the response
-                out.println("Message received: " + response + " from Balancer at " + socket.getPort());
+                out.println("Message received: " + response + " from Balancer at " + socket.getLocalPort());
 
                 // close the connection
                 in.close();

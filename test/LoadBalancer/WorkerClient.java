@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class WorkerClient implements Runnable {
     private String serverAddress = "localhost";
@@ -19,6 +20,7 @@ public class WorkerClient implements Runnable {
         this.errorWriter = errorWriter;
     }
 
+    @SuppressWarnings("resource")
     @Override
     public void run() {
         // while (true) {
@@ -35,15 +37,15 @@ public class WorkerClient implements Runnable {
                 String content = "Received: " + response;
                 dataWriter.append(content + "\n");
             } catch (IOException ex) {
-                // System.err.println("An error occurred: " + ex.getMessage());
+                System.err.println("File writing error occurred: " + ex.getMessage());
             }
 
         } catch (IOException e) {
             try {
-                String content = "Error in client communication: " + e.getMessage();
+                String content = "Error in client communication: " + e;
                 errorWriter.append(content + "\n");
             } catch (IOException ex) {
-                // System.err.println("An error occurred: " + ex.getMessage());
+                System.err.println("File writing error occurred: " + ex.getMessage());
             }
         }
         // }
