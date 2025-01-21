@@ -7,7 +7,7 @@ import java.net.Socket;
 public class Balancer implements Runnable {
     private String domain;
     private Integer port;
-    private Integer limitSize = 5000;
+    private Integer limitSize = 500000000;
 
     public Balancer(String domain, Integer port) {
         this.domain = domain;
@@ -41,7 +41,7 @@ public class Balancer implements Runnable {
 
                     // queue the socket in macrotaskqueue
                     macroTaskQueue.addSocket(socket);
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     System.out.println("Error in balancer communication: " + e.getMessage());
                 }
             }

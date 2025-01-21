@@ -9,8 +9,8 @@ public class Client {
         FileWriter dataWriter = new FileWriter(dataFilePath);
         String errorFilePath = "D:\\personal\\project\\Custom-HTTP\\test\\LoadBalancer\\error.log";
         FileWriter errorWriter = new FileWriter(errorFilePath);
-        for (int i = 0; i < 100; i++) {
-            new Thread(new WorkerClient(dataWriter, errorWriter)).start();
+        for (int i = 0; i < 5000; i++) {
+            new Thread(new WorkerClient(dataWriter, errorWriter, i)).start();
         }
     }
 }

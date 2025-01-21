@@ -12,13 +12,14 @@ public class WorkerClient implements Runnable {
     private Integer port = 8080;
     private FileWriter dataWriter;
     private FileWriter errorWriter;
+    private Integer requestNo;
 
-    public WorkerClient(FileWriter dataWriter, FileWriter errorWriter) {
+    public WorkerClient(FileWriter dataWriter, FileWriter errorWriter, Integer requestNo) {
         this.dataWriter = dataWriter;
         this.errorWriter = errorWriter;
+        this.requestNo = requestNo;
     }
 
-    @SuppressWarnings("resource")
     @Override
     public void run() {
         // while (true) {
@@ -29,7 +30,7 @@ public class WorkerClient implements Runnable {
             out.println("Hello from Client!");
 
             String response = in.readLine();
-            System.out.println("Received: " + response);
+            System.out.println("Received: " + requestNo + " - " + response);
 
             try {
                 String content = "Received: " + response;
