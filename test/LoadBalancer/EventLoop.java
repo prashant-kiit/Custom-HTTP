@@ -11,11 +11,19 @@ public class EventLoop implements Runnable {
     private ArrayList<Config> services;
     private Integer semaphore;
     private Integer denominator;
+    private Integer limitTime = 0;
 
     public EventLoop(ArrayList<Config> services) {
         this.services = services;
         this.semaphore = 0;
         this.denominator = services.size();
+    }
+
+    public EventLoop(ArrayList<Config> services, Integer limitTime) {
+        this.services = services;
+        this.semaphore = 0;
+        this.denominator = services.size();
+        this.limitTime = limitTime;
     }
 
     @Override
@@ -24,7 +32,8 @@ public class EventLoop implements Runnable {
         while (true) {
             try {
                 // short polling on macro task queue
-                Socket socket = MacroTaskQueue.getInstance().pollSocket();
+                MacroTaskQueue macroTaskQueue = MacroTaskQueue.getInstance();
+                Socket socket = macroTaskQueue.pollSocket();
                 if (socket == null) {
                     continue;
                 }
@@ -36,7 +45,7 @@ public class EventLoop implements Runnable {
                 String message = in.readLine();
 
                 // load balancing starts here
-                String response = "uninitialized variable"; 
+                String response = "uninitialized variable";
                 String subdomain = services.get(semaphore).getDomain();
                 Integer subport = services.get(semaphore).getPort();
                 System.out.println("New client directed to " + subdomain + ":" + subport);
@@ -62,7 +71,10 @@ public class EventLoop implements Runnable {
 
                 // update the semaphore
                 semaphore = (semaphore + 1) % denominator;
-            } catch (IOException e) {
+
+                // rate limiter by slowing down
+                Thread.sleep(limitTime);
+            } catch (IOException | InterruptedException e) {
                 System.out.println("Error in event loop: " + e.getMessage());
             }
         }

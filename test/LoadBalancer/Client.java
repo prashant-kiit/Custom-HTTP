@@ -1,6 +1,5 @@
 package test.LoadBalancer;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -10,7 +9,7 @@ public class Client {
         FileWriter dataWriter = new FileWriter(dataFilePath);
         String errorFilePath = "D:\\personal\\project\\Custom-HTTP\\test\\LoadBalancer\\error.log";
         FileWriter errorWriter = new FileWriter(errorFilePath);
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
             new Thread(new WorkerClient(dataWriter, errorWriter)).start();
         }
     }

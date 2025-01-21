@@ -27,4 +27,8 @@ public class MacroTaskQueue {
     public synchronized Socket pollSocket() {
         return queue.poll();
     }
+
+    public synchronized Integer getLength() {
+        return queue.size();
+    }
 }

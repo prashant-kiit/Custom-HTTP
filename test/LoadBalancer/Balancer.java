@@ -7,10 +7,17 @@ import java.net.Socket;
 public class Balancer implements Runnable {
     private String domain;
     private Integer port;
+    private Integer limitSize = 5000;
 
     public Balancer(String domain, Integer port) {
         this.domain = domain;
         this.port = port;
+    }
+
+    public Balancer(String domain, Integer port, Integer limitSize) {
+        this.domain = domain;
+        this.port = port;
+        this.limitSize = limitSize;
     }
 
     @Override
@@ -23,8 +30,17 @@ public class Balancer implements Runnable {
                     Socket socket = serverSocket.accept();
                     System.out.println("New client connected to Balancer");
 
+                    MacroTaskQueue macroTaskQueue = MacroTaskQueue.getInstance();
+
+                    // rate limiter by rejection/ignoring out
+                    Integer length = macroTaskQueue.getLength();
+                    if (length >= limitSize) {
+                        socket.close();
+                        continue;
+                    }
+
                     // queue the socket in macrotaskqueue
-                    MacroTaskQueue.getInstance().addSocket(socket);
+                    macroTaskQueue.addSocket(socket);
                 } catch (IOException e) {
                     System.out.println("Error in balancer communication: " + e.getMessage());
                 }
