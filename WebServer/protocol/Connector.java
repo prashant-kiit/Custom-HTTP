@@ -31,7 +31,14 @@ public class Connector {
         this.response = response;
         this.output = this.socket.getOutputStream();
         this.out = new ObjectOutputStream(output);
-        out.writeObject(response);
+        response.getData().forEach(t -> {
+            try {
+                out.writeObject(t);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        // out.writeObject(response);
     }
 
     public void close() throws IOException {

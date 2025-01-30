@@ -1,12 +1,13 @@
 package WebServer.protocol;
 
 import java.io.Serializable;
+import java.util.stream.Stream;
 
 public class Response implements Serializable {
     private Integer code;
     private String message;
-    private Object data;
-    private Object error;
+    private Stream<?> data;
+    private String error;
 
     // Getters
     public Integer getCode() {
@@ -17,11 +18,11 @@ public class Response implements Serializable {
         return message;
     }
 
-    public Object getData() {
+    public Stream<?> getData() {
         return data;
     }
 
-    public Object getError() {
+    public String getError() {
         return error;
     }
 
@@ -36,12 +37,12 @@ public class Response implements Serializable {
         return this;
     }
 
-    public Response setData(Object data) {
+    public Response setData(Stream<?> data) {
         this.data = data;
         return this;
     }
 
-    public Response setError(Object error) {
+    public Response setError(String error) {
         this.error = error;
         return this;
     }

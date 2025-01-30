@@ -11,9 +11,9 @@ public class RouteBuilder {
 
     public void listen() {
         routerHandler.insertRoute("GET=users", Controller.getUsers);
-        routerHandler.insertRoute("GET=users/:name", Controller.getUserById);
-        routerHandler.insertRoute("POST=user", Controller.postUser);
-        routerHandler.insertRoute("PUT=users/:name", Controller.putUser);
-        routerHandler.insertRoute("DELETE=users/:name", Controller.deleteUser);
+        // routerHandler.insertRoute("GET=users/:name", Controller.getUserById);
+        // routerHandler.insertRoute("POST=user", Controller.postUser);
+        // routerHandler.insertRoute("PUT=users/:name", Controller.putUser);
+        // routerHandler.insertRoute("DELETE=users/:name", Controller.deleteUser);
     }
 }

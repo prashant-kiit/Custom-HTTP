@@ -2,6 +2,7 @@ package WebServer.backend.src.application.database;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 public class User implements Serializable {
     private String name;
@@ -14,12 +15,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public static ArrayList<User> findUsers() {
+    public static Stream<User> findUsers() {
         ArrayList<User> users = new ArrayList<>();
         users.add(new User("John", "password", "j@j.com"));
         users.add(new User("Jane", "password", "j@j.com"));
         users.add(new User("Bob", "password", "j@j.com"));
-        return users;
+        return users.stream();
     }
 
     public static User findUserByName(String name) {
