@@ -19,17 +19,15 @@ public class Server {
 
             // Streaming numbers 1 to 5
             IntStream.rangeClosed(1, 5)
-                    .peek(i -> {
+                    .forEach(i -> {
                         writer.println("Streaming Data: " + i);
+                        System.out.println("Sent: Streaming Data " + i);
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                    })
-                    .forEach(i -> System.out.println("Sent: Streaming Data " + i));
-
-            writer.println("END"); // Indicate the end of the stream
+                    });
         }
 
         serverSocket.close();
