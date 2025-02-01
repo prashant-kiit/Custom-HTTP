@@ -22,12 +22,14 @@ public class DispatcherHandler implements Runnable {
             Request request = connector.getRequest();
 
             // find matched and unmatched route request
-            Route result = routerHandler.getRoutes()
+            Route matchedRoute = routerHandler.getRoutes()
                     .stream()
-                    .filter(route -> URLComponent.isSimilar(route, request)).findFirst().orElse(null);
+                    .filter(route -> URLComponent.isSimilar(route, request))
+                    .findFirst()
+                    .orElse(null);
 
             // handled unmatched route request
-            if (result == null) {
+            if (matchedRoute == null) {
                 Response response = new Response().setCode(404).setMessage("Failure").setError("Route not found");
                 try {
                     connector.sendResponse(response);
@@ -39,7 +41,18 @@ public class DispatcherHandler implements Runnable {
             }
 
             // handled matched route request
-            result.getControllerQueue().add(connector);
+            // result.getControllerQueue().add(connector);
+            Response response = matchedRoute.getController().apply(request);
+            try {
+                // send response
+                connector.sendResponse(response);
+
+                // close connector
+                connector.close();
+            } catch (IOException e) {
+                System.out.println("RouterHandler exception: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 

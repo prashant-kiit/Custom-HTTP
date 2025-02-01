@@ -16,16 +16,4 @@ public class Controller {
             return new Response().setCode(500).setMessage("Error").setError(e.getMessage());
         }
     };
-    // try {
-    // User user = User.deleteUserByName(request.getParams("name"));
-    // if (user == null) {
-    // return new Response().setCode(404).setMessage("Failure").setError("No users
-    // found");
-    // }
-    // return new Response().setCode(200).setMessage("Success").setData(user);
-    // } catch (Exception e) {
-    // return new
-    // Response().setCode(500).setMessage("Error").setError(e.getMessage());
-    // }
-    // };
 }
