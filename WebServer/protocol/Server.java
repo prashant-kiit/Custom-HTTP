@@ -7,9 +7,10 @@ public class Server implements Runnable {
     private String domain;
     private MainTaskQueue mainTaskQueue;
 
-    public Server(String domain, Integer port) throws IOException {
+    public Server(String domain, Integer port, MainTaskQueue mainTaskQueue) throws IOException {
         this.domain = domain;
         this.port = port;
+        this.mainTaskQueue = mainTaskQueue;
     }
 
     @Override
