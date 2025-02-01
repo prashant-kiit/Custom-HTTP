@@ -17,7 +17,7 @@ public class RouterHandler {
         // create route
         Route route = new Route(keyMethod, keyPath, controller);
         // start controller thread
-        new Thread(new ControllerHandler(route)).start();
+        // new Thread(new ControllerHandler(route)).start();
         // add route with controller and respective queue
         this.routes.add(route);
 
