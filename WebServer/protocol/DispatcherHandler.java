@@ -1,14 +1,18 @@
 package WebServer.protocol;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 
 public class DispatcherHandler implements Runnable {
     private RouterHandler routerHandler;
     private MainTaskQueue mainTaskQueue;
+    private ExecutorService executor;
 
-    public DispatcherHandler(RouterHandler routerHandler, MainTaskQueue mainTaskQueue) {
+    public DispatcherHandler(RouterHandler routerHandler, MainTaskQueue mainTaskQueue, ExecutorService executor) {
         this.routerHandler = routerHandler;
         this.mainTaskQueue = mainTaskQueue;
+        this.executor = executor;
     }
 
     @Override
@@ -40,19 +44,21 @@ public class DispatcherHandler implements Runnable {
                 return;
             }
 
-            // handled matched route request
-            // result.getControllerQueue().add(connector);
-            Response response = matchedRoute.getController().apply(request);
-            try {
-                // send response
-                connector.sendResponse(response);
+            // use matched route to get contoller and generate reponse. all this will
+            // happend in executor service (thread pool)
+            executor.submit(() -> {
+                Response response = matchedRoute.getController().apply(request);
+                try {
+                    // send response
+                    connector.sendResponse(response);
 
-                // close connector
-                connector.close();
-            } catch (IOException e) {
-                System.out.println("RouterHandler exception: " + e.getMessage());
-                e.printStackTrace();
-            }
+                    // close connector
+                    connector.close();
+                } catch (IOException e) {
+                    System.out.println("RouterHandler exception: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
         }
     }
 

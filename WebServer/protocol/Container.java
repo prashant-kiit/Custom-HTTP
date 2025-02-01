@@ -1,6 +1,8 @@
 package WebServer.protocol;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import WebServer.backend.src.application.RouteBuilder;
 
@@ -21,13 +23,14 @@ public class Container implements Runnable {
 
         RouterHandler routerHandler = new RouterHandler();
         MainTaskQueue mainTaskQueue = new MainTaskQueue();
+        ExecutorService executor = Executors.newFixedThreadPool(4);
 
         // starts controller thread
         RouteBuilder routeBuilder = new RouteBuilder(routerHandler);
         routeBuilder.listen();
 
         // starts dispacher thread
-        Dispatcher dispatcher = new Dispatcher(routerHandler, mainTaskQueue);
+        Dispatcher dispatcher = new Dispatcher(routerHandler, mainTaskQueue, executor);
         dispatcher.listen();
 
         // starts server thread
