@@ -22,7 +22,6 @@ public class Server implements Runnable {
                 Connector connector = serverConnector.accept();
                 System.out.println("New client connected");
                 connector.receiveRequest();
-                System.out.println("Connector received a request : connector = " + connector);
                 this.mainTaskQueue.addConnector(connector);
             }
         } catch (Exception ex) {

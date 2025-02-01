@@ -8,6 +8,12 @@ import java.io.OutputStream;
 
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Spliterators;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class ClientConnector {
     private Socket socket;
@@ -29,8 +35,27 @@ public class ClientConnector {
     public Object receiveResponse() throws IOException, ClassNotFoundException {
         this.input = socket.getInputStream();
         this.in = new ObjectInputStream(input);
-        Object response = in.readObject();
-        return response;
+        // recieve stream of response data on client at applicaton layer under one connection instance
+        Stream<Object> response = StreamSupport.stream(new Spliterators.AbstractSpliterator<Object>(
+                Long.MAX_VALUE, 0) {
+            @Override
+            public boolean tryAdvance(java.util.function.Consumer<? super Object> action) {
+                try {
+                    Object obj = in.readObject();
+                    if ("END".equals(obj))
+                        return false; // Stop on "END"
+                    action.accept(obj);
+                    return true;
+                } catch (Exception e) {
+                    return false; // End of stream
+                }
+            }
+        }, false);
+
+        List<Object> responses = response.collect(Collectors.toList());
+
+        // Object response = in.readObject();
+        return new ArrayList<>(responses);
     }
 
     public void close() throws IOException {

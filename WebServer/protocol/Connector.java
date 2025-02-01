@@ -31,6 +31,7 @@ public class Connector {
         this.response = response;
         this.output = this.socket.getOutputStream();
         this.out = new ObjectOutputStream(output);
+        // send stream of response data at application layer under one connection instance
         response.getData().forEach(t -> {
             try {
                 out.writeObject(t);
@@ -38,6 +39,7 @@ public class Connector {
                 e.printStackTrace();
             }
         });
+        out.writeObject("END");
         // out.writeObject(response);
     }
 
