@@ -1,9 +1,16 @@
 package WebServer.protocol;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ControllerExecutor {
-    public static void exceute(ExecutorService executor, Route matchedRoute, Request request, Connector connector) {
+    private ExecutorService executor;
+
+    public ControllerExecutor() {
+        this.executor = Executors.newFixedThreadPool(4);
+    }
+
+    public void exceute(Route matchedRoute, Request request, Connector connector) {
         ControllerExecutable controllerExecutable = new ControllerExecutable(matchedRoute, request, connector);
         executor.submit(controllerExecutable);
     }

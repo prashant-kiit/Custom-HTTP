@@ -6,12 +6,13 @@ import java.util.concurrent.ExecutorService;
 public class DispatcherHandler implements Runnable {
     private RouterHandler routerHandler;
     private MainTaskQueue mainTaskQueue;
-    private ExecutorService executor;
+    private ControllerExecutor controllerExecutor;
 
-    public DispatcherHandler(RouterHandler routerHandler, MainTaskQueue mainTaskQueue, ExecutorService executor) {
+    public DispatcherHandler(RouterHandler routerHandler, MainTaskQueue mainTaskQueue,
+            ControllerExecutor controllerExecutor) {
         this.routerHandler = routerHandler;
         this.mainTaskQueue = mainTaskQueue;
-        this.executor = executor;
+        this.controllerExecutor = controllerExecutor;
     }
 
     @Override
@@ -46,8 +47,7 @@ public class DispatcherHandler implements Runnable {
             // use matched route to get contoller and generate reponse. all this will
             // happend in executor service (thread pool)
 
-            ControllerExecutor.exceute(executor, matchedRoute, request, connector);
+            controllerExecutor.exceute(matchedRoute, request, connector);
         }
     }
-
 }

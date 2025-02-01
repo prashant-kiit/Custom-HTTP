@@ -23,14 +23,15 @@ public class Container implements Runnable {
 
         RouterHandler routerHandler = new RouterHandler();
         MainTaskQueue mainTaskQueue = new MainTaskQueue();
-        ExecutorService executor = Executors.newFixedThreadPool(4);
+        ControllerExecutor controllerExecutor = new ControllerExecutor();
+
 
         // starts controller thread
         RouteBuilder routeBuilder = new RouteBuilder(routerHandler);
         routeBuilder.listen();
 
         // starts dispacher thread
-        Dispatcher dispatcher = new Dispatcher(routerHandler, mainTaskQueue, executor);
+        Dispatcher dispatcher = new Dispatcher(routerHandler, mainTaskQueue, controllerExecutor);
         dispatcher.listen();
 
         // starts server thread
