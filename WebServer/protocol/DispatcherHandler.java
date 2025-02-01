@@ -1,7 +1,6 @@
 package WebServer.protocol;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
 
 public class DispatcherHandler implements Runnable {
     private RouterHandler routerHandler;

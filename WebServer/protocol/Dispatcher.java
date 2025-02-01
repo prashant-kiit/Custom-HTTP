@@ -1,7 +1,5 @@
 package WebServer.protocol;
 
-import java.util.concurrent.ExecutorService;
-
 public class Dispatcher {
     private DispatcherHandler dispatcherHandler;
 
