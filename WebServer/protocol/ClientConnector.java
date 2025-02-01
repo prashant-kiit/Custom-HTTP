@@ -26,10 +26,10 @@ public class ClientConnector {
         out.writeObject(request);
     }
 
-    public Response receiveResponse() throws IOException, ClassNotFoundException {
+    public Object receiveResponse() throws IOException, ClassNotFoundException {
         this.input = socket.getInputStream();
         this.in = new ObjectInputStream(input);
-        Response response = (Response) in.readObject();
+        Object response = in.readObject();
         return response;
     }
 

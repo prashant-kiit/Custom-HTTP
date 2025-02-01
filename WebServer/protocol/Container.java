@@ -33,7 +33,7 @@ public class Container implements Runnable {
         // starts server thread
         Server server;
         try {
-            server = new Server(domain, port);
+            server = new Server(domain, port, mainTaskQueue);
             server.listen();
         } catch (IOException e) {
             e.printStackTrace();
