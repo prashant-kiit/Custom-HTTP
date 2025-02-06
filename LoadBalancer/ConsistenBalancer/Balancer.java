@@ -15,7 +15,7 @@ public class Balancer {
     }
 
     public void place(String input) {
-        if (semaphore == 12) {
+        if (semaphore == 12 || semaphore == 13) {
             circle.get(semaphore % 8).setIsActive(false);
         }
 
@@ -29,9 +29,9 @@ public class Balancer {
         } else {
             // consistent hashing mechanism
             Integer innerSemaphore = (semaphore % 8) + 1;
-            Boolean innerIsActive = circle.get(innerSemaphore).getIsActive();
 
             while (true) {
+                Boolean innerIsActive = circle.get(innerSemaphore).getIsActive();
                 if (innerIsActive) {
                     circle.get(innerSemaphore).getQueue().add(input);
                     break;
