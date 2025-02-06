@@ -1,7 +1,11 @@
 package ConsistenBalancer;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Server {
     private Boolean isActive;
+    private Queue<String> queue = new LinkedList<>();
 
     public Server(Boolean isActive) {
         this.isActive = isActive;
@@ -9,5 +13,9 @@ public class Server {
 
     public Boolean getIsActive() {
         return isActive;
+    }
+
+    public Queue<String> getQueue() {
+        return queue;
     }
 }
