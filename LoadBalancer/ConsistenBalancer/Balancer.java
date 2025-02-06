@@ -6,7 +6,6 @@ import java.util.List;
 public class Balancer {
     private List<Server> circle = new ArrayList<Server>();
     private Integer semaphore = 0;
-    private Integer round = 0;
 
     public Balancer() {
         for (Integer i = 0; i < 8; i++) {
@@ -16,15 +15,30 @@ public class Balancer {
     }
 
     public void place(String input) {
-        System.out.println("semaphore = " + semaphore);
         if (semaphore == 12) {
             circle.get(semaphore % 8).setIsActive(false);
         }
 
         Boolean isActive = circle.get(semaphore % 8).getIsActive();
+
+        System.out.println("semaphore = " + semaphore);
         System.out.println("isActive = " + isActive);
+
         if (isActive) {
             circle.get(semaphore % 8).getQueue().add(input);
+        } else {
+            // consistent hashing mechanism
+            Integer innerSemaphore = (semaphore % 8) + 1;
+            Boolean innerIsActive = circle.get(innerSemaphore).getIsActive();
+
+            while (true) {
+                if (innerIsActive) {
+                    circle.get(innerSemaphore).getQueue().add(input);
+                    break;
+                }
+                innerSemaphore = (innerSemaphore + 1) % 8;
+            }
+
         }
 
         semaphore++;
@@ -41,3 +55,4 @@ public class Balancer {
 
 // problems
 // request ignored
+// drift the request to the next nearest active server
