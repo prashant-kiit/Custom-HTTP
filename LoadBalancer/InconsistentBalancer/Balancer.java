@@ -1,4 +1,4 @@
-package LoadBalancer;
+package InconsistentBalancer;
 
 import java.io.IOException;
 import java.net.ServerSocket;

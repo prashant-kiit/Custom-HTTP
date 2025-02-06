@@ -1,4 +1,4 @@
-package LoadBalancer;
+package InconsistentBalancer;
 
 import java.io.BufferedReader;
 import java.io.IOException;

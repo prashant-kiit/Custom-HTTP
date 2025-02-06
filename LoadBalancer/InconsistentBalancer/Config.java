@@ -1,4 +1,4 @@
-package LoadBalancer;
+package InconsistentBalancer;
 
 public class Config {
     private String domain;

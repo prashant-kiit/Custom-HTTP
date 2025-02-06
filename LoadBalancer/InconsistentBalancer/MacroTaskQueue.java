@@ -1,5 +1,5 @@
 
-package LoadBalancer;
+package InconsistentBalancer;
 
 import java.net.Socket;
 import java.util.LinkedList;
