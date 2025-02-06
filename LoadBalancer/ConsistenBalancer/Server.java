@@ -18,4 +18,8 @@ public class Server {
     public Queue<String> getQueue() {
         return queue;
     }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 }
