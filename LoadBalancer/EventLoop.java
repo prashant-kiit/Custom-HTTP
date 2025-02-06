@@ -44,7 +44,7 @@ public class EventLoop implements Runnable {
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 String message = in.readLine();
 
-                // load balancing starts here
+                // load balancing starts here using round robin
                 String response = "uninitialized variable";
                 String subdomain = services.get(semaphore).getDomain();
                 Integer subport = services.get(semaphore).getPort();

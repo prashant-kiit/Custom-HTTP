@@ -29,4 +29,8 @@ public class ControllerExecutable implements Runnable {
         }
     }
 
+    public void sendServerError() {
+
+    }
+
 }

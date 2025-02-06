@@ -1,7 +1,5 @@
 package WebServer.protocol;
 
-import java.io.IOException;
-
 public class DispatcherHandler implements Runnable {
     private RouterHandler routerHandler;
     private MainTaskQueue mainTaskQueue;
@@ -32,21 +30,16 @@ public class DispatcherHandler implements Runnable {
                     .orElse(null);
 
             // handled unmatched route request
-            if (matchedRoute == null) {
-                Response response = new Response().setCode(404).setMessage("Failure").setError("Route not found");
-                try {
-                    connector.sendResponse(response);
-                } catch (IOException e) {
-                    System.out.println("Dispatcher exception: " + e.getMessage());
-                    e.printStackTrace();
-                }
-                return;
-            }
-
-            // use matched route to get contoller and generate reponse. all this will
-            // happend in executor service (thread pool)
-
-            controllerExecutor.exceute(matchedRoute, request, connector);
+            handleRequest(connector, request, matchedRoute);
         }
+    }
+
+    private void handleRequest(Connector connector, Request request, Route matchedRoute) {
+        if (matchedRoute == null) {
+            controllerExecutor.exceuteServerErrorHandler(connector);
+        }
+        // use matched route to get controller and generate response. all this will
+        // happen in executor service (thread pool)
+        controllerExecutor.exceute(matchedRoute, request, connector);
     }
 }
